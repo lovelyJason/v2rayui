@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# v2ray服务端的操作，启动，重启，关闭等
+# v2rayui服务端的操作，启动，重启，关闭等
 import json
 import os
 import commands
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     with open("/usr/local/v2rayui/panel.config") as f:
         data = json.load(f)
 
-    print("欢迎使用 v2rayui 面板 ---- By 雨落无声\n")
+    print("欢迎使用 v2rayui 面板 ---- By jasonhuang\n")
     print("当前面板用户名：" + str(data['username']))
     print("当前面板密码：" + str(data['password']))
     print("当前面板监听端口：" + str(data['port']))

@@ -33,13 +33,87 @@ fi
 # 安装依赖
 if [ ${OS} == CentOS ];then
 	pip install -r requirements.txt
+	pip install supervisor
+
 fi
 
 cd /usr/local
 git clone https://github.com/lovelyJason/v2rayui.git
 
 # 生成配置
-cd /usr/local/v2rayui && python init.py
+# cd /usr/local/v2rayui && python init.py
 cp /usr/local/v2rayui/v2rayui.py /usr/local/bin/v2rayui
 chmod +x /usr/local/bin/v2rayui
-chmod +x /usr/local/v2rayui/start.sh
+chmod +x /usr/local/v2rayui/start.sh      # web service启动入口
+
+# 配置supervisorctl
+mkdir /etc/supervisor
+mkdir /etc/supervisor/conf.d
+echo_supervisord_conf > /etc/supervisor/supervisord.conf
+cat>>/etc/supervisor/supervisord.conf<<EOF
+[include]
+files = /etc/supervisor/conf.d/*.ini
+EOF
+touch /etc/supervisor/conf.d/v2rayui.ini
+cat>>/etc/supervisor/conf.d/v2rayui.ini<<EOF
+[program:v2rayui]
+command=/usr/local/v2rayui/start.sh run
+stdout_logfile=/var/log/v2rayui
+autostart=true
+autorestart=true
+startsecs=5
+priority=1
+stopasgroup=true
+killasgroup=true
+EOF
+supervisorctl reload
+
+# 初始化v2rayui界面参数
+read -p "请输入默认用户名[默认admin]： " un
+read -p "请输入默认登录密码[默认admin]： " pw
+read -p "请输入监听端口号[默认5000]： " uport
+if [[ -z "${uport}" ]];then
+	uport="5000"
+else
+	if [[ "$uport" =~ ^(-?|\+?)[0-9]+(\.?[0-9]+)?$ ]];then
+		if [[ $uport -ge "65535" || $uport -le 1 ]];then
+			echo "端口范围取值[1,65535]，应用默认端口号5000"
+			unset uport
+			uport="5000"
+		else
+			tport=`netstat -anlt | awk '{print $4}' | sed -e '1,2d' | awk -F : '{print $NF}' | sort -n | uniq | grep "$uport"`
+			if [[ ! -z ${tport} ]];then
+				echo "端口号已存在！应用默认端口号5000"
+				unset uport
+				uport="5000"
+			fi
+		fi
+	else
+		echo "请输入数字！应用默认端口号5000"
+		uport="5000"
+	fi
+fi
+if [[ -z "${un}" ]];then
+	un="admin"
+fi
+if [[ -z "${pw}" ]];then
+	pw="admin"
+fi
+sed -i "s/%%username%%/${un}/g" /usr/local/v2rayui/panel.config
+sed -i "s/%%passwd%%/${pw}/g" /usr/local/v2rayui/panel.config
+sed -i "s/%%port%%/${uport}/g" /usr/local/v2rayui/panel.config
+
+supervisord -c /etc/supervisor/supervisord.conf
+echo "supervisord -c /etc/supervisor/supervisord.conf">>/etc/rc.local     # 加入开机启动
+chmod +x /etc/rc.local
+
+echo "安装成功！
+"
+echo "面板端口：${uport}"
+echo "默认用户名：${un}"
+echo "默认密码：${pw}"
+echo ''
+echo "输入 v2ray 并回车可以手动管理网页面板相关功能"
+
+#清理垃圾文件
+rm -rf /root/config.json
