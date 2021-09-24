@@ -4,7 +4,7 @@
 # v2rayui服务端的操作，启动，重启，关闭等
 import json
 import os
-import commands
+# import commands
 
 
 def open_port(port):
@@ -17,7 +17,7 @@ def open_port(port):
 
     for x in cmd:
         x = x.replace("$1", str(port))
-        commands.getoutput(x)
+        # commands.getoutput(x)
 
 
 def start():
