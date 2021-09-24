@@ -36,6 +36,10 @@ if [ ${OS} == CentOS ];then
 fi
 
 cd /usr/local
+git clone https://github.com/lovelyJason/v2rayui.git
 
 # 生成配置
-python init.py
+cd /usr/local/v2rayui && python init.py
+cp /usr/local/v2rayui/v2rayui.py /usr/local/bin/v2rayui
+chmod +x /usr/local/bin/v2rayui
+chmod +x /usr/local/v2rayui/start.sh
