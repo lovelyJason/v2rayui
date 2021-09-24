@@ -18,7 +18,6 @@ def getip():
             ip = s.getsockname()[0]
     return str(ip)
 
-
 def open_port(port):
     cmd = [
         "iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport $1 -j ACCEPT",
@@ -31,18 +30,18 @@ def open_port(port):
         x = x.replace("$1", str(port))
         commands.getoutput(x)
 
-
+# 读取v2ray.config服务端配置文件并进行修改再写入
 def gen_server():
-    with open("/usr/local/V2ray.Fun/v2ray.config") as f:
+    with open("/usr/local/v2rayui/v2ray.config") as f:
         data = json.load(f)
 
     server_websocket = json.loads("""
     {
-  "path": "",
-  "headers": {
-    "Host": ""
-  }
-}
+        "path": "",
+        "headers": {
+            "Host": ""
+        }
+    }
     """)
 
     server_mkcp = json.loads("""
@@ -64,78 +63,78 @@ def gen_server():
 
     server_tls = json.loads("""
     {
-                "certificates": [
-                    {
-                        "certificateFile": "/path/to/example.domain/fullchain.cer",
-                        "keyFile": "/path/to/example.domain.key"
-                    }
-                ]
+        "certificates": [
+            {
+                "certificateFile": "/path/to/example.domain/fullchain.cer",
+                "keyFile": "/path/to/example.domain.key"
             }
+        ]
+    }
     """)
 
     server_raw = """
-{
-    "log": {
-        "access": "/var/log/v2ray/access.log",
-        "error": "/var/log/v2ray/error.log",
-        "loglevel": "info"
-    },
-    "inbound": {
-        "port": 39885,
-        "protocol": "vmess",
-        "settings": {
-            "clients": [
-                {
-                    "id": "475161c6-837c-4318-a6bd-e7d414697de5",
-                    "level": 1,
-                    "alterId": 100
-                }
-            ]
+    {
+        "log": {
+            "access": "/var/log/v2ray/access.log",
+            "error": "/var/log/v2ray/error.log",
+            "loglevel": "info"
         },
-        "streamSettings": {
-            "network": "ws"
-        }
-    },
-    "outbound": {
-        "protocol": "freedom",
-        "settings": {}
-    },
-    "outboundDetour": [
-        {
-            "protocol": "blackhole",
-            "settings": {},
-            "tag": "blocked"
-        }
-    ],
-    "routing": {
-        "strategy": "rules",
-        "settings": {
-            "rules": [
-                {
-                    "type": "field",
-                    "ip": [
-                        "0.0.0.0/8",
-                        "10.0.0.0/8",
-                        "100.64.0.0/10",
-                        "127.0.0.0/8",
-                        "169.254.0.0/16",
-                        "172.16.0.0/12",
-                        "192.0.0.0/24",
-                        "192.0.2.0/24",
-                        "192.168.0.0/16",
-                        "198.18.0.0/15",
-                        "198.51.100.0/24",
-                        "203.0.113.0/24",
-                        "::1/128",
-                        "fc00::/7",
-                        "fe80::/10"
-                    ],
-                    "outboundTag": "blocked"
-                }
-            ]
+        "inbound": {
+            "port": 39885,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "475161c6-837c-4318-a6bd-e7d414697de5",
+                        "level": 1,
+                        "alterId": 100
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "ws"
+            }
+        },
+        "outbound": {
+            "protocol": "freedom",
+            "settings": {}
+        },
+        "outboundDetour": [
+            {
+                "protocol": "blackhole",
+                "settings": {},
+                "tag": "blocked"
+            }
+        ],
+        "routing": {
+            "strategy": "rules",
+            "settings": {
+                "rules": [
+                    {
+                        "type": "field",
+                        "ip": [
+                            "0.0.0.0/8",
+                            "10.0.0.0/8",
+                            "100.64.0.0/10",
+                            "127.0.0.0/8",
+                            "169.254.0.0/16",
+                            "172.16.0.0/12",
+                            "192.0.0.0/24",
+                            "192.0.2.0/24",
+                            "192.168.0.0/16",
+                            "198.18.0.0/15",
+                            "198.51.100.0/24",
+                            "203.0.113.0/24",
+                            "::1/128",
+                            "fc00::/7",
+                            "fe80::/10"
+                        ],
+                        "outboundTag": "blocked"
+                    }
+                ]
+            }
         }
     }
-}
     """
     server = json.loads(server_raw)
     if data['protocol'] == "vmess":
@@ -202,7 +201,7 @@ def gen_server():
     with open("/etc/v2ray/config.json", "w") as f:
         f.write(json.dumps(server, indent=2))
 
-
+# 写入vray.config客户端配置，方便前端直接下载配置文件
 def gen_client():
     client_raw = """
     {
@@ -299,21 +298,21 @@ def gen_client():
             ]
         }
     }
-}
+    }
     """
 
     cLient_mkcp = json.loads("""
     {
-                "mtu": 1350,
-                "tti": 50,
-                "uplinkCapacity": 20,
-                "downlinkCapacity": 100,
-                "congestion": false,
-                "readBufferSize": 2,
-                "writeBufferSize": 2,
-                "header": {
-                    "type": "none"
-                }
+        "mtu": 1350,
+        "tti": 50,
+        "uplinkCapacity": 20,
+        "downlinkCapacity": 100,
+        "congestion": false,
+        "readBufferSize": 2,
+        "writeBufferSize": 2,
+        "header": {
+            "type": "none"
+        }
     }
     """)
 
@@ -330,7 +329,7 @@ def gen_client():
     """)
 
     client = json.loads(client_raw)
-    with open("/usr/local/V2ray.Fun/v2ray.config") as f:
+    with open("/usr/local/v2rayui/v2ray.config") as f:
         data = json.load(f)
 
     if data['mux'] == "on":
@@ -371,5 +370,5 @@ def gen_client():
     with open("/root/config.json", "w") as f:
         f.write(json.dumps(client, indent=2))
 
-    with open("/usr/local/V2ray.Fun/static/config.json", "w") as f:
+    with open("/usr/local/v2rayui/static/config.json", "w") as f:
         f.write(json.dumps(client, indent=2))

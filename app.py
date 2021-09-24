@@ -1,12 +1,14 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+# web service
 import os
-
+import json
 from flask import Flask, render_template, request
 from flask_basicauth import BasicAuth
 
-from config_generator import *  # noqa
+# from config_generator import *
 
+# 从配置文件加载信息用于鉴权
 with open("panel.config") as f:
     panel_config = json.load(f)
 
@@ -14,7 +16,7 @@ app = Flask(__name__, static_url_path='/static')
 
 app.config['BASIC_AUTH_USERNAME'] = panel_config['username']
 app.config['BASIC_AUTH_PASSWORD'] = panel_config['password']
-app.config['BASIC_AUTH_FORCE'] = True
+app.config['BASIC_AUTH_FORCE'] = True       # 整个站点都验证
 basic_auth = BasicAuth(app)
 
 

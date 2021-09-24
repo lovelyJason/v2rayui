@@ -76,7 +76,7 @@ chmod +x /usr/local/V2ray.Fun/start.sh
 #Start All services
 service v2ray start
 
-#Configure Supervisor
+#Configure Supervisor 将start.sh注册到supervisorctl
 mkdir /etc/supervisor
 mkdir /etc/supervisor/conf.d
 echo_supervisord_conf > /etc/supervisor/supervisord.conf
