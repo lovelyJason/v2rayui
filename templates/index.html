@@ -7,7 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>V2ray.fun - 运行状态</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script> -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
     <link rel="stylesheet" href="/static/css/mdui.min.css">
     <script src="/static/js/mdui.min.js"></script>
 </head>
@@ -102,7 +103,7 @@
 
                         </td>
                     </tr>
-  
+
 
                     <tr class="vmess-info">
                         <td>加密方式</td>
@@ -230,11 +231,11 @@
             document.getElementById('secret').innerHTML = data['secret']
         }
         document.getElementById('ip').innerHTML = data["ip"];
-       
+
         document.getElementById('port').innerHTML = data["port"];
-        
+
         document.getElementById('trans').innerHTML = data["trans"];
-        
+
         if(data["tls"] === "on")
         {
             document.getElementById('tls_on').removeAttribute('hidden');
@@ -253,7 +254,7 @@
             document.getElementById('mux_off').removeAttribute('hidden');
         }
 
-        
+
 
     });
 
