@@ -169,7 +169,7 @@
       '</select>'
     $("#changenode_form").append(change_node_form)
     let index = nodeList.findIndex(val => {
-      return val === data[domain]
+      return val === data['domain']
     })
     document.getElementById('node' + (data['encrypt'] + 1)).setAttribute('selected','selected');
     mdui.mutation();
