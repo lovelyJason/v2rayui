@@ -358,7 +358,7 @@ def gen_client():
     with open("/usr/local/v2rayui/v2ray.config") as f:
         data = json.load(f)
 
-    outbound = data['outbounds'][0]
+    outbound = client['outbounds'][0]
     if data['mux'] == "on":
         outbound['mux']['enabled'] = True
     elif data['mux'] == "off":
