@@ -71,7 +71,7 @@ cat>>/etc/supervisor/conf.d/v2rayui.ini<<EOF
 [program:v2rayui]
 user=root
 command=bash /usr/local/v2rayui/start.sh
-stderr_logfile=/var/log/v2ray.err.log
+stderr_logfile=/var/log/v2rayui.err.log
 stdout_logfile=/var/log/v2rayui.out.log
 autostart=true
 autorestart=true

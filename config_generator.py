@@ -205,99 +205,124 @@ def gen_server():
 def gen_client():
     client_raw = """
     {
-    "log": {
-        "error": "error.log",
-        "loglevel": "info"
-    },
-    "inbound": {
-        "port": 1080,
-        "listen": "127.0.0.1",
-        "protocol": "socks",
-        "settings": {
-            "auth": "noauth",
-            "ip": "127.0.0.1"
-        }
-    },
-    "outbound": {
-        "protocol": "vmess",
-        "settings": {
-            "vnext": [
-                {
-                    "address": "",
-                    "port": 39885,
-                    "users": [
-                        {
-                            "id": "475161c6-837c-4318-a6bd-e7d414697de5",
-                            "alterId": 100,
-                            "security": "auto"
-                        }
-                    ]
-                }
-            ]
-        },
-        "streamSettings": {
-            "network": "ws"
-        },
-        "mux": {
-            "enabled": false
-        }
-    },
-    "inboundDetour": null,
-    "outboundDetour": [
+      "policy": null,
+      "log": {
+        "access": "",
+        "error": "",
+        "loglevel": "warning"
+      },
+      "inbounds": [
         {
-            "protocol": "freedom",
-            "settings": {},
-            "tag": "direct"
-        }
-    ],
-    "dns": {
-        "servers": [
-            "8.8.8.8",
-            "8.8.4.4",
-            "localhost"
-        ]
-    },
-    "routing": {
-        "strategy": "rules",
-        "settings": {
-            "domainStrategy": "IPIfNonMatch",
-            "rules": [
-                {
-                    "type": "field",
-                    "ip": [
-                        "0.0.0.0/8",
-                        "10.0.0.0/8",
-                        "100.64.0.0/10",
-                        "127.0.0.0/8",
-                        "169.254.0.0/16",
-                        "172.16.0.0/12",
-                        "192.0.0.0/24",
-                        "192.0.2.0/24",
-                        "192.168.0.0/16",
-                        "198.18.0.0/15",
-                        "198.51.100.0/24",
-                        "203.0.113.0/24",
-                        "::1/128",
-                        "fc00::/7",
-                        "fe80::/10",
-                        "geoip:cn"
-                    ],
-                    "domain": [
-                        "geosite:cn"
-                    ],
-                    "outboundTag": "direct"
-                },
-                {
-                    "type": "chinasites",
-                    "outboundTag": "direct"
-                },
-                {
-                    "type": "chinaip",
-                    "outboundTag": "direct"
-                }
+          "tag": "proxy",
+          "port": 10808,
+          "listen": "0.0.0.0",
+          "protocol": "socks",
+          "sniffing": {
+            "enabled": true,
+            "destOverride": [
+              "http",
+              "tls"
             ]
+          },
+          "settings": {
+            "auth": "noauth",
+            "udp": true,
+            "ip": null,
+            "address": null,
+            "clients": null
+          },
+          "streamSettings": null
         }
-    }
+      ],
+      "outbounds": [
+        {
+          "tag": "proxy",
+          "protocol": "vmess",
+          "settings": {
+            "vnext": [
+              {
+                "address": "v2us.j.ssnss.live",
+                "port": 443,
+                "users": [
+                  {
+                    "id": "dc1ffbb4-f291-4b5c-be8f-3423a2353134",
+                    "alterId": 10,
+                    "email": "t@t.tt",
+                    "security": "auto"
+                  }
+                ]
+              }
+            ],
+            "servers": null,
+            "response": null
+          },
+          "streamSettings": {
+            "network": "ws",
+            "security": "tls",
+            "tlsSettings": {
+              "allowInsecure": true,
+              "serverName": "v2us.j.ssnss.live"
+            },
+            "tcpSettings": null,
+            "kcpSettings": null,
+            "wsSettings": {
+              "connectionReuse": true,
+              "path": "/index",
+              "headers": {
+                "Host": "v2us.j.ssnss.live"
+              }
+            },
+            "httpSettings": null,
+            "quicSettings": null
+          },
+          "mux": {
+            "enabled": true,
+            "concurrency": 8
+          }
+        },
+        {
+          "tag": "direct",
+          "protocol": "freedom",
+          "settings": {
+            "vnext": null,
+            "servers": null,
+            "response": null
+          },
+          "streamSettings": null,
+          "mux": null
+        },
+        {
+          "tag": "block",
+          "protocol": "blackhole",
+          "settings": {
+            "vnext": null,
+            "servers": null,
+            "response": {
+              "type": "http"
+            }
+          },
+          "streamSettings": null,
+          "mux": null
+        }
+      ],
+      "stats": null,
+      "api": null,
+      "dns": null,
+      "routing": {
+        "domainStrategy": "IPIfNonMatch",
+        "rules": [
+          {
+            "type": "field",
+            "port": null,
+            "inboundTag": [
+              "api"
+            ],
+            "outboundTag": "api",
+            "ip": null,
+            "domain": null
+          }
+        ]
+      }
     }
     """
 
@@ -324,31 +349,32 @@ def gen_client():
 
     mux_disable = json.loads("""
     {
-            "enabled": false
+      "enabled": false
     }
     """)
 
     client = json.loads(client_raw)
+
     with open("/usr/local/v2rayui/v2ray.config") as f:
         data = json.load(f)
+        outbound = data['outbounds'][0]
 
     if data['mux'] == "on":
-        client['outbound']['mux']['enabled'] = True
+        outbound['mux']['enabled'] = True
     elif data['mux'] == "off":
-        client['outbound']['mux']['enabled'] = False
+        outbound['mux']['enabled'] = False
 
     if data['domain'] == "none":
-        client['outbound']['settings']['vnext'][0]['address'] = data['ip']
+        outbound['settings']['vnext'][0]['address'] = data['ip']
     else:
-        client['outbound']['settings']['vnext'][0]['address'] = data['domain']
+        outbound['settings']['vnext'][0]['address'] = data['domain']
 
-    client['outbound']['settings']['vnext'][0]['port'] = int(data['port'])
-    client['outbound']['settings']['vnext'][0]['users'][0]['id'] = data['uuid']
-    client['outbound']['settings']['vnext'][0]['users'][0]['security'] = data[
-        'encrypt']
+    outbound['settings']['vnext'][0]['port'] = int(data['port'])
+    outbound['settings']['vnext'][0]['users'][0]['id'] = data['uuid']
+    outbound['settings']['vnext'][0]['users'][0]['security'] = data['encrypt']
 
     if data['trans'] == "websocket":
-        client['outbound']['streamSettings']['network'] = "ws"
+        outbound['streamSettings']['network'] = "ws"
 
     elif data['trans'].startswith("mkcp"):
         if data['trans'] == "mkcp-srtp":
@@ -358,16 +384,18 @@ def gen_client():
         elif data['trans'] == "mkcp-wechat":
             cLient_mkcp['header']['type'] = "wechat-video"
 
-        client['outbound']['streamSettings']['network'] = "kcp"
-        client['outbound']['streamSettings']['kcpSettings'] = cLient_mkcp
+        outbound['streamSettings']['network'] = "kcp"
+        outbound['streamSettings']['kcpSettings'] = cLient_mkcp
 
     elif data['trans'] == "tcp":
-        client['outbound']['streamSettings']['network'] = "tcp"
+        outbound['streamSettings']['network'] = "tcp"
 
     if data['tls'] == "on":
-        client['outbound']['streamSettings']['security'] = "tls"
+        outbound['streamSettings']['security'] = "tls"
+        outbound['streamSettings']['tlsSettings']['serverName'] = data['domain']
+        outbound['streamSettings']['wsSettings']['headers']['Host'] = data['domain']
 
-    with open("/root/config.json", "w") as f:
+    with open("/usr/local/etc/v2ray/config.json", "w") as f:
         f.write(json.dumps(client, indent=2))
 
     with open("/usr/local/v2rayui/static/config.json", "w") as f:

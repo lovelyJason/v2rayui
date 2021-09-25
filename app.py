@@ -5,8 +5,9 @@ import os
 import json
 from flask import Flask, render_template, request
 from flask_basicauth import BasicAuth
+import commands
 
-# from config_generator import *
+from config_generator import *
 
 # 从配置文件加载信息用于鉴权
 with open("panel.config") as f:
@@ -19,7 +20,7 @@ app.config['BASIC_AUTH_PASSWORD'] = panel_config['password']
 app.config['BASIC_AUTH_FORCE'] = True       # 整个站点都验证
 basic_auth = BasicAuth(app)
 
-
+# v2ray.confg用于抽离主要配置参数添加到服务端和客户端的v2ray配置中
 def change_config(config, value):
     with open("v2ray.config") as f:
         old_json = json.load(f)
@@ -62,6 +63,13 @@ def restart_service():
     change_config("status", "on")
     return "OK"
 
+
+@app.route('/set_node', methods=['GET', 'POST'])
+def set_node():
+    items = request.args.to_dict()
+    domain = items['node']
+    change_config("domain", domain)
+    return "OK"
 
 @app.route('/set_protocol', methods=['GET', 'POST'])
 def set_protocol():
