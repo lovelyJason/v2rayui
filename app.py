@@ -69,6 +69,8 @@ def set_node():
     items = request.args.to_dict()
     domain = items['node']
     change_config("domain", domain)
+    gen_client()
+    restart_service()
     return "OK"
 
 @app.route('/set_protocol', methods=['GET', 'POST'])

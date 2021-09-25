@@ -151,17 +151,27 @@
 </body>
 
 <script type="text/javascript">
+  let nodeList = [
+    'v2hk1.j.ssnss.live',
+    'v2hk2.j.ssnss.live',
+    'v2sg.j.ssnss.live',
+    'v2us.j.ssnss.live',
+    'v2jpn.j.ssnss.live',
+  ]
   $.get("/get_info", function (return_data) {
     let data = JSON.parse(return_data);
     var change_node_form = '<select name="node" class="mdui-select" mdui-select>\n' +
-      '<option id="1" value="v2hk1.j.ssnss.live" selected> 香港高速1-J</option>\n' +
-      '<option id="2" value="v2hk2.j.ssnss.live"> 香港高速2-J </option>\n' +
-      '<option id="3" value="v2sg.j.ssnss.live"> 新加坡高速-J </option>\n' +
-      '<option id="4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
-      '<option id="5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
+      '<option id="node1" value="v2hk1.j.ssnss.live" selected> 香港高速1-J</option>\n' +
+      '<option id="node2" value="v2hk2.j.ssnss.live"> 香港高速2-J </option>\n' +
+      '<option id="node3" value="v2sg.j.ssnss.live"> 新加坡高速-J </option>\n' +
+      '<option id="node4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
+      '<option id="node5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
       '</select>'
     $("#changenode_form").append(change_node_form)
-
+    let index = nodeList.findIndex(val => {
+      return val === data[domain]
+    })
+    document.getElementById('node' + (data['encrypt'] + 1)).setAttribute('selected','selected');
     mdui.mutation();
 
   });
