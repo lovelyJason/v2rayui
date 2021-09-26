@@ -3,10 +3,10 @@
 # web service
 import os
 import json
+import commands
+import requests
 from flask import Flask, render_template, request
 from flask_basicauth import BasicAuth
-import commands
-
 from config_generator import *
 
 # 从配置文件加载信息用于鉴权
@@ -72,6 +72,18 @@ def set_node():
     gen_client()
     restart_service()
     return "OK"
+
+@app.route('/set_subscirbe', methods=['GET', 'POST'])
+def set_subscirbe():
+    items = request.args.to_dict()
+    subscirbe_url = items['subscirbe_url']
+    try:
+        res = requests.get(subscirbe_url, timeout=5).text
+        status = "OK"
+        print(res)
+    except ConnectTimeout:
+        status = "FAIL"
+    return status
 
 @app.route('/set_protocol', methods=['GET', 'POST'])
 def set_protocol():

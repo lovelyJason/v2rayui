@@ -110,7 +110,7 @@
     function timer() {
         $('#log-access-content').load('/get_access_log');
         $('#log-error-content').load('/get_error_log');
-        var t=setTimeout("timer()",1500);
+        var t=setTimeout("timer()",30000);
     }
     timer()
 </script>

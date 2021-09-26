@@ -18,6 +18,11 @@
     .mdui-row .mdui-table-fluid {
       height: 100%;
     }
+    @media (min-width: 1024px)  {
+      .mdui-col-md-1 {
+        width: auto;
+      }
+    }
   </style>
   <script src="/static/js/mdui.min.js"></script>
 </head>
@@ -113,12 +118,24 @@
               <td>
                 <div class="mdui-row">
                   <div class="mdui-col-md-6">
-                    <input id="uuid" class="mdui-textfield-input" type="text" readonly="readonly" value="xxx" />
+                    <form id="subscirbe_form" action="##">
+                      <input name="subscirbe_url" id="subscirbe_url" class="mdui-textfield-input" type="text" value="开发中" />
+                    </form>
                   </div>
-                  <div class="mdui-col-md-1" onclick="change_uuid()">
-                    <button class="mdui-btn mdui-color-theme-accent mdui-ripple">
+                  <div class="mdui-col-md-1" >
+                    <button disabled onclick="update_subscirbe()" class="mdui-btn mdui-color-theme-accent mdui-ripple">
                       <i class="mdui-icon material-icons">autorenew</i>
                     </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr class="vmess-config">
+              <td>最近一次订阅</td>
+              <td>
+                <div class="mdui-row">
+                  <div class="mdui-col-md-6">
+                    123
                   </div>
                 </div>
               </td>
@@ -127,14 +144,14 @@
               <td>切换服务器节点</td>
               <td>
                 <div class="mdui-row">
-                  <div class="mdui-col-md-4" style="margin: 3px">
+                  <div class="mdui-col-md-4">
                     <form id="changenode_form" action="##">
                     </form>
                   </div>
                   <div class="mdui-col-md-2"></div>
                   <div class="mdui-col-md-1">
-                    <button onclick="change_node()"
-                      class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-color-theme-accent mdui-ripple">切换节点</button>
+                    <button onclick="change_node()" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-color-theme-accent mdui-ripple">切换节点</button>
+                    <button onclick="test_speed()" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-color-theme-accent mdui-ripple">测速</button>
                   </div>
                 </div>
               </td>
@@ -147,79 +164,91 @@
   </div>
   <p></p>
 
+  <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script>
+  <script type="text/javascript">
+    let nodeList = [
+      'v2hk1.j.ssnss.live',
+      'v2hk2.j.ssnss.live',
+      'v2sg.j.ssnss.live',
+      'v2us.j.ssnss.live',
+      'v2jpn.j.ssnss.live',
+    ]
+    $.get("/get_info", function (return_data) {
+      let data = JSON.parse(return_data);
+      var change_node_form = '<select name="node" class="mdui-select" mdui-select>\n' +
+        '<option id="node1" value="v2hk1.j.ssnss.live" selected> 香港高速1-J</option>\n' +
+        '<option id="node2" value="v2hk2.j.ssnss.live"> 香港高速2-J </option>\n' +
+        '<option id="node3" value="v2sg.j.ssnss.live"> 新加坡高速-J </option>\n' +
+        '<option id="node4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
+        '<option id="node5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
+        '</select>'
+      $("#changenode_form").append(change_node_form)
+      let index = nodeList.findIndex(val => {
+        return val === data['domain']
+      })
+      document.getElementById('node' + (index + 1)).setAttribute('selected','selected');
+      mdui.mutation();
+  
+    });
+    // $.get('https://www.sstz.info/v1/api/interchangeable/899818d0533c58000', function(data) {
+    //   console.log(data)
+    // })
+  </script>
+  
+  <script type="text/javascript">
+    function message(m_message) {
+      mdui.snackbar(
+        {
+          message: m_message,
+          position: "right-top"
+        }
+      )
+    }
+    function change_node() {
+      $.get("/set_node", $('#changenode_form').serialize());
+      message("节点已修改")
+    }
 
+    function update_subscirbe() {
+      $.get("/set_subscirbe", $("#subscirbe_form").serialize())
+      message("已更新订阅")
+    }
+    
+    function test_speed() {
+  
+    }
+    
+    function change_mux(action) {
+      if (action === "on") {
+        $.get("/set_mux", {
+          "action": "on",
+        });
+        message("Mux.cool 已开启")
+      }
+      else if (action === "off") {
+        $.get("/set_mux", {
+          "action": "off",
+        });
+        message("Mux.cool 已关闭")
+      }
+    }
+  
+    function start_service() {
+      $.get("/start_service");
+      message("服务已启动")
+    }
+  
+    function stop_service() {
+      $.get("/stop_service");
+      message("服务已停止")
+    }
+  
+    function restart_service() {
+      $.get("/restart_service");
+      message("服务已重启")
+    }
+  </script>
 </body>
 
-<script type="text/javascript">
-  let nodeList = [
-    'v2hk1.j.ssnss.live',
-    'v2hk2.j.ssnss.live',
-    'v2sg.j.ssnss.live',
-    'v2us.j.ssnss.live',
-    'v2jpn.j.ssnss.live',
-  ]
-  $.get("/get_info", function (return_data) {
-    let data = JSON.parse(return_data);
-    var change_node_form = '<select name="node" class="mdui-select" mdui-select>\n' +
-      '<option id="node1" value="v2hk1.j.ssnss.live" selected> 香港高速1-J</option>\n' +
-      '<option id="node2" value="v2hk2.j.ssnss.live"> 香港高速2-J </option>\n' +
-      '<option id="node3" value="v2sg.j.ssnss.live"> 新加坡高速-J </option>\n' +
-      '<option id="node4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
-      '<option id="node5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
-      '</select>'
-    $("#changenode_form").append(change_node_form)
-    let index = nodeList.findIndex(val => {
-      return val === data['domain']
-    })
-    document.getElementById('node' + (index + 1)).setAttribute('selected','selected');
-    mdui.mutation();
-
-  });
-</script>
-
-<script type="text/javascript">
-  function message(m_message) {
-    mdui.snackbar(
-      {
-        message: m_message,
-        position: "right-top"
-      }
-    )
-  }
-  function change_node() {
-    $.get("/set_node", $('#changenode_form').serialize());
-    message("节点已修改")
-  }
-
-  function change_mux(action) {
-    if (action === "on") {
-      $.get("/set_mux", {
-        "action": "on",
-      });
-      message("Mux.cool 已开启")
-    }
-    else if (action === "off") {
-      $.get("/set_mux", {
-        "action": "off",
-      });
-      message("Mux.cool 已关闭")
-    }
-  }
-
-  function start_service() {
-    $.get("/start_service");
-    message("服务已启动")
-  }
-
-  function stop_service() {
-    $.get("/stop_service");
-    message("服务已停止")
-  }
-
-  function restart_service() {
-    $.get("/restart_service");
-    message("服务已重启")
-  }
-</script>
 
 </html>
