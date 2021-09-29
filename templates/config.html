@@ -193,10 +193,12 @@
         let data = JSON.parse(return_data);
         if (data["status"] === "on") {
           document.getElementById('start').removeAttribute('hidden');
+          document.getElementById('stop').setAttribute('hidden', true);
         }
         else
         {
             document.getElementById('stop').removeAttribute('hidden');
+            document.getElementById('start').setAttribute('hidden', true);
         }
         var change_node_form = '<select name="node" class="mdui-select" mdui-select>\n' +
           '<option id="node1" value="v2hk1.j.ssnss.live" selected> 香港高速1-J</option>\n' +
@@ -256,15 +258,17 @@
     }
   
     function start_service() {
-      $.get("/start_service");
-      message("服务已启动")
-      getInfo()
+      $.get("/start_service", function() {
+        message("服务已启动")
+        getInfo()
+      });
     }
   
     function stop_service() {
-      $.get("/stop_service");
-      message("服务已停止")
-      getInfo()
+      $.get("/stop_service", function () {
+        message("服务已停止")
+        getInfo()
+      });
     }
   
     function restart_service() {
