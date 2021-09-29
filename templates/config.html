@@ -187,6 +187,8 @@
       'v2sg.j.ssnss.live',
       'v2us.j.ssnss.live',
       'v2jpn.j.ssnss.live',
+      'ls1.cngrok.com',
+      'ls2.cngrok.com'
     ]
     function getInfo() {
       $.get("/get_info", function (return_data) {
@@ -206,6 +208,8 @@
           '<option id="node3" value="v2sg.j.ssnss.live"> 新加坡高速-J </option>\n' +
           '<option id="node4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
           '<option id="node5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
+          '<option id="node6" value="ls1.cngrok.com"> 备用高速1-1 </option>\n' +
+          '<option id="node7" value="ls2.cngrok.com"> 备用高速2-2 </option>\n' +
           '</select>'
         $("#changenode_form").empty()
         $("#changenode_form").append(change_node_form)

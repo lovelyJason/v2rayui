@@ -246,7 +246,7 @@ def gen_client():
                 "users": [
                   {
                     "id": "dc1ffbb4-f291-4b5c-be8f-3423a2353134",
-                    "alterId": 10,
+                    "alterId": 0,
                     "email": "t@t.tt",
                     "security": "auto"
                   }
