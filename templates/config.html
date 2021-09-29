@@ -188,6 +188,12 @@
       'v2us.j.ssnss.live',
       'v2jpn.j.ssnss.live',
     ]
+    $("#changenode_form").append(change_node_form)
+    let index = nodeList.findIndex(val => {
+      return val === data['domain']
+    })
+    document.getElementById('node' + (index + 1)).setAttribute('selected','selected');
+    mdui.mutation();
     function getInfo() {
       $.get("/get_info", function (return_data) {
         let data = JSON.parse(return_data);
@@ -207,12 +213,6 @@
           '<option id="node4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
           '<option id="node5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
           '</select>'
-        $("#changenode_form").append(change_node_form)
-        let index = nodeList.findIndex(val => {
-          return val === data['domain']
-        })
-        document.getElementById('node' + (index + 1)).setAttribute('selected','selected');
-        mdui.mutation();
     
       });
     }
