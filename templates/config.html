@@ -207,7 +207,6 @@
       return val === data['domain']
     })
     document.getElementById('node' + (index + 1)).setAttribute('selected', 'selected');
-    mdui.mutation();
     function getInfo() {
       $.get("/get_info", function (return_data) {
         let data = JSON.parse(return_data);
@@ -223,6 +222,7 @@
       });
     }
     getInfo()
+    mdui.mutation();
   </script>
 
   <script type="text/javascript">
