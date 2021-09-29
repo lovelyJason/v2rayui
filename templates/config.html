@@ -18,7 +18,8 @@
     .mdui-row .mdui-table-fluid {
       height: 100%;
     }
-    @media (min-width: 1024px)  {
+
+    @media (min-width: 1024px) {
       .mdui-col-md-1 {
         width: auto;
       }
@@ -63,8 +64,10 @@
           <i class="mdui-collapse-item-arrow mdui-icon material-icons"></i>
         </div>
         <div class="mdui-collapse-item-body mdui-list">
-          <a href="index.html" class="mdui-list-item mdui-ripple" mdui-tooltip="{content: '服务端', position: 'top'}">运行状态</a>
-          <a href="config.html" class="mdui-list-item mdui-ripple  mdui-list-item-active" mdui-tooltip="{content: '客户端', position: 'top'}">订阅配置</a>
+          <a href="index.html" class="mdui-list-item mdui-ripple"
+            mdui-tooltip="{content: '服务端', position: 'top'}">运行状态</a>
+          <a href="config.html" class="mdui-list-item mdui-ripple  mdui-list-item-active"
+            mdui-tooltip="{content: '客户端', position: 'top'}">订阅配置</a>
           <a href="app.html" class="mdui-list-item mdui-ripple">软件下载</a>
           <a href="log.html" class="mdui-list-item mdui-ripple">运行日志</a>
         </div>
@@ -89,16 +92,17 @@
             <tr>
               <td>运行状态</td>
               <td>
-                  <div class="mdui-row">
-                      <div id="start" class="mdui-chip" hidden>
-                      <span class="mdui-chip-icon mdui-color-green"><i class="mdui-icon material-icons">play_arrow</i></span>
-                      <span class="mdui-chip-title">运行中</span>
+                <div class="mdui-row">
+                  <div id="start" class="mdui-chip" hidden>
+                    <span class="mdui-chip-icon mdui-color-green"><i
+                        class="mdui-icon material-icons">play_arrow</i></span>
+                    <span class="mdui-chip-title">运行中</span>
                   </div>
                   <div id="stop" class="mdui-chip" hidden>
-                      <span class="mdui-chip-icon mdui-color-red"><i class="mdui-icon material-icons">stop</i></span>
-                      <span class="mdui-chip-title">已停止</span>
+                    <span class="mdui-chip-icon mdui-color-red"><i class="mdui-icon material-icons">stop</i></span>
+                    <span class="mdui-chip-title">已停止</span>
                   </div>
-                  </div>
+                </div>
               </td>
             </tr>
             <tr>
@@ -134,10 +138,11 @@
                 <div class="mdui-row">
                   <div class="mdui-col-md-6">
                     <form id="subscirbe_form" action="##">
-                      <input name="subscirbe_url" id="subscirbe_url" class="mdui-textfield-input" type="text" value="开发中" />
+                      <input name="subscirbe_url" id="subscirbe_url" class="mdui-textfield-input" type="text"
+                        value="开发中" />
                     </form>
                   </div>
-                  <div class="mdui-col-md-1" >
+                  <div class="mdui-col-md-1">
                     <button disabled onclick="update_subscirbe()" class="mdui-btn mdui-color-theme-accent mdui-ripple">
                       <i class="mdui-icon material-icons">autorenew</i>
                     </button>
@@ -165,8 +170,10 @@
                   </div>
                   <div class="mdui-col-md-2"></div>
                   <div class="mdui-col-md-1">
-                    <button onclick="change_node()" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-color-theme-accent mdui-ripple">切换节点</button>
-                    <button onclick="test_speed()" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-color-theme-accent mdui-ripple">测速</button>
+                    <button onclick="change_node()"
+                      class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-color-theme-accent mdui-ripple">切换节点</button>
+                    <button onclick="test_speed()"
+                      class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-color-theme-accent mdui-ripple">测速</button>
                   </div>
                 </div>
               </td>
@@ -188,11 +195,18 @@
       'v2us.j.ssnss.live',
       'v2jpn.j.ssnss.live',
     ]
+    var change_node_form = '<select name="node" class="mdui-select" mdui-select>\n' +
+      '<option id="node1" value="v2hk1.j.ssnss.live" selected> 香港高速1-J</option>\n' +
+      '<option id="node2" value="v2hk2.j.ssnss.live"> 香港高速2-J </option>\n' +
+      '<option id="node3" value="v2sg.j.ssnss.live"> 新加坡高速-J </option>\n' +
+      '<option id="node4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
+      '<option id="node5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
+      '</select>'
     $("#changenode_form").append(change_node_form)
     let index = nodeList.findIndex(val => {
       return val === data['domain']
     })
-    document.getElementById('node' + (index + 1)).setAttribute('selected','selected');
+    document.getElementById('node' + (index + 1)).setAttribute('selected', 'selected');
     mdui.mutation();
     function getInfo() {
       $.get("/get_info", function (return_data) {
@@ -201,24 +215,16 @@
           document.getElementById('start').removeAttribute('hidden');
           document.getElementById('stop').setAttribute('hidden', true);
         }
-        else
-        {
-            document.getElementById('stop').removeAttribute('hidden');
-            document.getElementById('start').setAttribute('hidden', true);
+        else {
+          document.getElementById('stop').removeAttribute('hidden');
+          document.getElementById('start').setAttribute('hidden', true);
         }
-        var change_node_form = '<select name="node" class="mdui-select" mdui-select>\n' +
-          '<option id="node1" value="v2hk1.j.ssnss.live" selected> 香港高速1-J</option>\n' +
-          '<option id="node2" value="v2hk2.j.ssnss.live"> 香港高速2-J </option>\n' +
-          '<option id="node3" value="v2sg.j.ssnss.live"> 新加坡高速-J </option>\n' +
-          '<option id="node4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
-          '<option id="node5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
-          '</select>'
-    
+
       });
     }
     getInfo()
   </script>
-  
+
   <script type="text/javascript">
     function message(m_message) {
       mdui.snackbar(
@@ -237,11 +243,11 @@
       $.get("/set_subscirbe", $("#subscirbe_form").serialize())
       message("已更新订阅")
     }
-    
+
     function test_speed() {
-  
+
     }
-    
+
     function change_mux(action) {
       if (action === "on") {
         $.get("/set_mux", {
@@ -256,21 +262,21 @@
         message("Mux.cool 已关闭")
       }
     }
-  
+
     function start_service() {
-      $.get("/start_service", function() {
+      $.get("/start_service", function () {
         message("服务已启动")
         getInfo()
       });
     }
-  
+
     function stop_service() {
       $.get("/stop_service", function () {
         message("服务已停止")
         getInfo()
       });
     }
-  
+
     function restart_service() {
       $.get("/restart_service");
       message("服务已重启")
