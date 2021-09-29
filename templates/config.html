@@ -90,7 +90,7 @@
               <td>运行状态</td>
               <td>
                   <div class="mdui-row">
-                      <div id="start" class="mdui-chip">
+                      <div id="start" class="mdui-chip" hidden>
                       <span class="mdui-chip-icon mdui-color-green"><i class="mdui-icon material-icons">play_arrow</i></span>
                       <span class="mdui-chip-title">运行中</span>
                   </div>
@@ -188,26 +188,33 @@
       'v2us.j.ssnss.live',
       'v2jpn.j.ssnss.live',
     ]
-    $.get("/get_info", function (return_data) {
-      let data = JSON.parse(return_data);
-      var change_node_form = '<select name="node" class="mdui-select" mdui-select>\n' +
-        '<option id="node1" value="v2hk1.j.ssnss.live" selected> 香港高速1-J</option>\n' +
-        '<option id="node2" value="v2hk2.j.ssnss.live"> 香港高速2-J </option>\n' +
-        '<option id="node3" value="v2sg.j.ssnss.live"> 新加坡高速-J </option>\n' +
-        '<option id="node4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
-        '<option id="node5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
-        '</select>'
-      $("#changenode_form").append(change_node_form)
-      let index = nodeList.findIndex(val => {
-        return val === data['domain']
-      })
-      document.getElementById('node' + (index + 1)).setAttribute('selected','selected');
-      mdui.mutation();
-  
-    });
-    // $.get('https://www.sstz.info/v1/api/interchangeable/899818d0533c58000', function(data) {
-    //   console.log(data)
-    // })
+    function getInfo() {
+      $.get("/get_info", function (return_data) {
+        let data = JSON.parse(return_data);
+        if (data["status"] === "on") {
+          document.getElementById('start').removeAttribute('hidden');
+        }
+        else
+        {
+            document.getElementById('stop').removeAttribute('hidden');
+        }
+        var change_node_form = '<select name="node" class="mdui-select" mdui-select>\n' +
+          '<option id="node1" value="v2hk1.j.ssnss.live" selected> 香港高速1-J</option>\n' +
+          '<option id="node2" value="v2hk2.j.ssnss.live"> 香港高速2-J </option>\n' +
+          '<option id="node3" value="v2sg.j.ssnss.live"> 新加坡高速-J </option>\n' +
+          '<option id="node4" value="v2us.j.ssnss.live"> 美国高速-J </option>\n' +
+          '<option id="node5" value="v2jpn.j.ssnss.live"> 日本高速J </option>\n' +
+          '</select>'
+        $("#changenode_form").append(change_node_form)
+        let index = nodeList.findIndex(val => {
+          return val === data['domain']
+        })
+        document.getElementById('node' + (index + 1)).setAttribute('selected','selected');
+        mdui.mutation();
+    
+      });
+    }
+    getInfo()
   </script>
   
   <script type="text/javascript">
@@ -251,11 +258,13 @@
     function start_service() {
       $.get("/start_service");
       message("服务已启动")
+      getInfo()
     }
   
     function stop_service() {
       $.get("/stop_service");
       message("服务已停止")
+      getInfo()
     }
   
     function restart_service() {
