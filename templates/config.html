@@ -87,10 +87,25 @@
           </thead>
           <tbody>
             <tr>
+              <td>运行状态</td>
+              <td>
+                  <div class="mdui-row">
+                      <div id="start" class="mdui-chip">
+                      <span class="mdui-chip-icon mdui-color-green"><i class="mdui-icon material-icons">play_arrow</i></span>
+                      <span class="mdui-chip-title">运行中</span>
+                  </div>
+                  <div id="stop" class="mdui-chip" hidden>
+                      <span class="mdui-chip-icon mdui-color-red"><i class="mdui-icon material-icons">stop</i></span>
+                      <span class="mdui-chip-title">已停止</span>
+                  </div>
+                  </div>
+              </td>
+            </tr>
+            <tr>
               <td>运行控制</td>
               <td>
                 <div class="mdui-row">
-                  <div class="mdui-col-md-3">
+                  <div class="mdui-col-md-3" style="padding-left: 0">
                     <div class="mdui-chip" onclick="start_service()">
                       <span class="mdui-chip-icon mdui-color-green"><i
                           class="mdui-icon material-icons">play_arrow</i></span>

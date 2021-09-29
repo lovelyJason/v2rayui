@@ -30,9 +30,9 @@ def change_config(config, value):
     with open("v2ray.config", "w") as f:
         json.dump(old_json, f, indent=2)
 
-
+# 测试不出来状态， systemctl stop v2ray时也有进程
 def get_status():
-    cmd = """ps -ef | grep "v2ray" | grep -v grep | awk '{print $2}'"""
+    cmd = """ps -ef | grep "v2ray" | grep -v grep | grep v2ray/config.json | awk '{print $2}'"""
     output = commands.getoutput(cmd)
     if output == "":
         return "off"
