@@ -3,7 +3,7 @@
 # web service
 import os
 import json
-import commands
+import subprocess
 import requests
 from flask import Flask, render_template, request
 from flask_basicauth import BasicAuth
@@ -34,7 +34,9 @@ def change_config(config, value):
 # kill grep杀掉进程ps -ef |grep hello |awk '{print $2}'|xargs kill -9
 def get_status():
     cmd = """ps -ef | grep "v2ray" | grep -v grep | grep v2ray/config.json | awk '{print $2}'"""
-    output = commands.getoutput(cmd)
+    # output = commands.getoutput(cmd)
+    output = subprocess.getoutput(cmd)
+    # python3中被subprocess.getoutput(cmd)替代
     if output == "":
         return "off"
     else:
@@ -44,7 +46,7 @@ def get_status():
 @app.route('/start_service')
 def start_service():
     cmd = "service v2ray start"
-    commands.getoutput(cmd)
+    subprocess.getoutput(cmd)
     change_config("status", "on")
     return "OK"
 
@@ -52,7 +54,7 @@ def start_service():
 @app.route('/stop_service')
 def stop_service():
     cmd = "service v2ray stop"
-    commands.getoutput(cmd)
+    subprocess.getoutput(cmd)
     change_config("status", "off")
     return "OK"
 
@@ -60,7 +62,7 @@ def stop_service():
 @app.route('/restart_service')
 def restart_service():
     cmd = "service v2ray restart"
-    commands.getoutput(cmd)
+    subprocess.getoutput(cmd)
     change_config("status", "on")
     return "OK"
 
@@ -269,10 +271,10 @@ def gen_ssl():
     cmd = "bash /root/.acme.sh/acme.sh  --issue -d {0} --standalone".format(
         domain)
     check_acme = """ps -ef | grep "acme.sh" | grep -v grep | awk '{print $2}'"""
-    commands.getoutput(cmd)
-    acme_status = commands.getoutput(check_acme)
+    subprocess.getoutput(cmd)
+    acme_status = subprocess.getoutput(check_acme)
     while acme_status != "":
-        acme_status = commands.getoutput(check_acme)
+        acme_status = subprocess.getoutput(check_acme)
 
     result = os.path.exists("/root/.acme.sh/{0}/fullchain.cer".format(domain))
     start_service()
