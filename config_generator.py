@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-import commands
+import subprocess
 import json
 
 import requests
@@ -28,7 +28,7 @@ def open_port(port):
 
     for x in cmd:
         x = x.replace("$1", str(port))
-        commands.getoutput(x)
+        subprocess.getoutput(x)
 
 # 读取v2ray.config服务端配置文件并进行修改再写入
 def gen_server():
